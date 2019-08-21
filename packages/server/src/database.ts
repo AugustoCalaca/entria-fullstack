@@ -6,8 +6,11 @@ export function connectDatabase() {
     mongoose.Promise = global.Promise;
     mongoose.connection
       .on('error', error => reject(error))
-      .on('close', () => console.log('Database connection closed.'))
-      .once('open', () => resolve(mongoose.connections[0]));
+      .on('close', () => console.log('[Mongoose] - Disconnected'))
+      .once('open', () => {
+        console.log('[Mongoose] - Connected');
+        resolve(mongoose.connections[0])
+      });
 
     mongoose.connect(
       databaseConfig,
