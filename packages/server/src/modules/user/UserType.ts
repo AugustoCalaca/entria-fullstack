@@ -35,5 +35,5 @@ export default UserType;
 
 export const UserConnection = connectionDefinitions({
   name: 'User',
-  nodeType: GraphQLNonNull(UserType),
+  nodeType: UserType,
 });
