@@ -2,6 +2,7 @@ type Mutation {
   UserChangePassword(input: UserChangePasswordInput!): UserChangePasswordPayload
   UserLoginWithEmail(input: UserLoginWithEmailInput!): UserLoginWithEmailPayload
   UserRegisterWithEmail(input: UserRegisterWithEmailInput!): UserRegisterWithEmailPayload
+  BookRegister(input: BookRegisterInput!): BookRegisterPayload
 }
 
 """An object with an ID"""
@@ -28,17 +29,85 @@ type PageInfoExtended {
 """The root of all... queries"""
 type Query {
   """Fetches an object given its ID"""
-  node(
-    """The ID of an object"""
-    id: ID!
-  ): Node
+  node(id: ID!): Node
+
   me: User
+
   user(id: ID!): User
+  author(id: ID!): Author
+  book(id: ID!): Book
+
   users(after: String, first: Int, before: String, last: Int, search: String): UserConnection
+  books(after: String, first: Int, before: String, last: Int, search: String): BookConnection
 }
 
 type Subscription {
   UserAdded: UserAddedPayload
+  BookAdded: BookAddedPayload
+}
+
+type Author implements Node {
+  id: ID!
+  _id: String!
+  name: String!
+  age: Int!
+  books: BookConnection
+}
+
+type BookConnection {
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+    This allows a client to fetch the first five objects by passing "5" as the
+    argument to "first", then fetch the total count so it could display "5 of 83",
+    for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """A list of edges."""
+  edges: [BookEdge]
+
+  pageInfo: PageInfoExtended!
+}
+
+type BookEdge {
+  node: Book!
+  cursor: String!
+}
+
+"""Book data"""
+type Book implements Node {
+  id: ID!
+  _id: String!
+  title: String!
+}
+
+type BookEdge {
+  node: Book!
+  cursor: String!
+}
+
+input BookRegisterInput {
+  authorId: String!
+  bookTitle: String!
+  clientMutationId: String!
+}
+
+type BookRegisterPayload {
+  author: Author!
+  book: Book!
+  clientMutationId: String!
+}
+
+type BookAddedPayload {
+  bookEdge: BookEdge
 }
 
 """User data"""
