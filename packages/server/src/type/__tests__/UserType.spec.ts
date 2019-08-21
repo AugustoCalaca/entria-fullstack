@@ -123,8 +123,6 @@ it('should return a user with id and email null', async () => {
     id: toGlobalId('User', user.id),
   }
 
-  console.log('context');
-  console.log(context);
   const result = await graphql(schema, query, rootValue, context, variables);
   const { data } = result;
 
