@@ -16,8 +16,6 @@ const schema = new mongoose.Schema({
   timestamps: true
 });
 
-// schema.index({ title: 'text' });
-
 export interface IBook extends Document {
   author: Types.ObjectId;
   title: string

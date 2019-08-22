@@ -23,11 +23,11 @@ export default class Book {
 
 export const getLoader = () => new Dataloader((ids: ReadonlyArray<string>) => mongooseLoader(BookModel, ids));
 
-const viewerCanSee = () => true; // add auth
+const viewerCanSee = () => true; // add only auth
 
 export const load = async (context: GraphQLContext, id: string | Object | ObjectId): Promise<Book | null> => {
   if(!id && typeof id !== 'string') {
-    return null
+    return null;
   }
 
   try {
