@@ -2,6 +2,8 @@ type Mutation {
   UserChangePassword(input: UserChangePasswordInput!): UserChangePasswordPayload
   UserLoginWithEmail(input: UserLoginWithEmailInput!): UserLoginWithEmailPayload
   UserRegisterWithEmail(input: UserRegisterWithEmailInput!): UserRegisterWithEmailPayload
+
+  AuthorRegister(input: AuthorRegisterInput!): AuthorRegisterPayload
   BookRegister(input: BookRegisterInput!): BookRegisterPayload
 }
 
@@ -38,11 +40,13 @@ type Query {
   book(id: ID!): Book
 
   users(after: String, first: Int, before: String, last: Int, search: String): UserConnection
+  authors(after: String, first: Int, before: String, last: Int, search: String): AuthorConnection
   books(after: String, first: Int, before: String, last: Int, search: String): BookConnection
 }
 
 type Subscription {
   UserAdded: UserAddedPayload
+  AuthorAdded: AuthorAddedPayload
   BookAdded: BookAddedPayload
 }
 
@@ -54,7 +58,18 @@ type Author implements Node {
   books: BookConnection
 }
 
-type BookConnection {
+input AuthorRegisterInput {
+  name: String!
+  age: Number!
+  error: String
+}
+
+type AuthorRegisterPayload {
+  name: String!
+  age: Number!
+}
+
+type AuthorConnection {
   count: Int!
 
   """
@@ -72,8 +87,26 @@ type BookConnection {
   endCursorOffset: Int!
 
   """A list of edges."""
-  edges: [BookEdge]
+  edges: [AuthorEdge]
 
+  pageInfo: PageInfoExtended!
+}
+
+type AuthorEdge {
+  node: Author!
+  cursor: String!
+}
+
+type AuthorAddedPayload {
+  authorEdge: AuthorEdge
+}
+
+type BookConnection {
+  count: Int!
+  totalCount: Int!
+  startCursorOffset: Int!
+  endCursorOffset: Int!
+  edges: [BookEdge]
   pageInfo: PageInfoExtended!
 }
 
@@ -89,11 +122,6 @@ type Book implements Node {
   title: String!
 }
 
-type BookEdge {
-  node: Book!
-  cursor: String!
-}
-
 input BookRegisterInput {
   authorId: String!
   bookTitle: String!
@@ -103,6 +131,7 @@ input BookRegisterInput {
 type BookRegisterPayload {
   author: Author!
   book: Book!
+  error: String
   clientMutationId: String!
 }
 
@@ -140,27 +169,11 @@ type UserChangePasswordPayload {
 
 """A connection to a list of items."""
 type UserConnection {
-  """Number of items in this connection"""
   count: Int!
-
-  """
-  A count of the total number of objects in this connection, ignoring pagination.
-    This allows a client to fetch the first five objects by passing "5" as the
-    argument to "first", then fetch the total count so it could display "5 of 83",
-    for example.
-  """
   totalCount: Int!
-
-  """Offset from start"""
   startCursorOffset: Int!
-
-  """Offset till end"""
   endCursorOffset: Int!
-
-  """Information to aid in pagination."""
   pageInfo: PageInfoExtended!
-
-  """A list of edges."""
   edges: [UserEdge]!
 }
 
