@@ -15,8 +15,8 @@ const schema = new mongoose.Schema({
 });
 
 export interface IAuthor extends Document {
-  name: String,
-  age: Number
+  name: string,
+  age: number
 }
 
 const AuthorModel: Model<IAuthor> = mongoose.model('Author', schema);
