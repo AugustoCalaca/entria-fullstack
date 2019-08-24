@@ -6,18 +6,21 @@ declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
 import AuthorModel, { IAuthor } from './AuthorModel';
 import { GraphQLContext } from '../../TypeDefinition';
+import { IBook } from '../book/BookModel';
 
 export default class Author {
   id: string;
   _id: Types.ObjectId;
   name: string;
   age: number;
+  books: Array<Types.ObjectId | IBook>
 
   constructor(data: IAuthor) {
     this.id = data._id;
     this._id = data._id;
     this.name = data.name;
     this.age = data.age;
+    this.books = data.books;
   }
 };
 
