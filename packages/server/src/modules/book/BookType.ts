@@ -4,6 +4,9 @@ import { globalIdField } from 'graphql-relay';
 import { connectionDefinitions } from '../../core/connection/CustomConnectionType';
 import { registerType, nodeInterface } from '../../interface/NodeInterface';
 
+import AuthorType from '../author/AuthorType';
+import AuthorModel from '../author/AuthorModel';
+
 const BookType = registerType(
   new GraphQLObjectType({
     name: 'Book',
@@ -15,8 +18,8 @@ const BookType = registerType(
         resolve: book => book._id
       },
       author: {
-        type: GraphQLString,
-        resolve: book => book.author
+        type: AuthorType,
+        resolve: async book => await AuthorModel.findById(book.author)
       },
       title: {
         type: GraphQLString,
