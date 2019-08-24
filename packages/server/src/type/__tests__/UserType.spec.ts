@@ -102,7 +102,7 @@ it('should return a user by global id', async () => {
 });
 
 
-it('should return a user with id and email null', async () => {
+it('should return a user by global id with active and email null', async () => {
   const user = await createRows.createUser();
 
   const query = `
