@@ -1,4 +1,5 @@
 import mongoose, { Model, Document, Types } from 'mongoose';
+import { IAuthor } from '../author/AuthorModel';
 
 const schema = new mongoose.Schema({
   author: {
@@ -17,10 +18,10 @@ const schema = new mongoose.Schema({
 });
 
 export interface IBook extends Document {
-  author: Types.ObjectId;
-  title: string
+  author: Types.ObjectId | IAuthor;
+  title: string;
 }
 
 const BookModel: Model<IBook> = mongoose.model('Book', schema);
 
-export default BookModel
+export default BookModel;
