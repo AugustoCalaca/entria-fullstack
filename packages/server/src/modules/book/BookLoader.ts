@@ -5,25 +5,26 @@ import { ConnectionArguments } from 'graphql-relay';
 declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
 import BookModel, { IBook } from './BookModel';
+import { IAuthor } from '../author/AuthorModel';
 import { GraphQLContext } from '../../TypeDefinition';
 
 export default class Book {
   id: string;
   _id: Types.ObjectId;
-  author: Types.ObjectId;
+  author: Types.ObjectId | IAuthor;
   title: string;
 
   constructor(data: IBook) {
     this.id = data._id;
     this._id = data._id;
     this.author = data.author;
-    this.title = data.title
+    this.title = data.title;
   }
 };
 
 export const getLoader = () => new Dataloader((ids: ReadonlyArray<string>) => mongooseLoader(BookModel, ids));
 
-const viewerCanSee = () => true; // add only auth
+const viewerCanSee = () => true;
 
 export const load = async (context: GraphQLContext, id: string | Object | ObjectId): Promise<Book | null> => {
   if(!id && typeof id !== 'string') {
@@ -32,7 +33,7 @@ export const load = async (context: GraphQLContext, id: string | Object | Object
 
   try {
     const data = await context.dataloaders.BookLoader.load((id as string));
-    return viewerCanSee() ? new Book(data) : null;
+    return viewerCanSee() ? new Book(data): null;
   } catch(err) {
     return null;
   }
@@ -44,10 +45,11 @@ export const clearAndPrimeCache = (context: GraphQLContext, id: Types.ObjectId, 
 
 type BookArgs = ConnectionArguments & {
   search?: string
+  findBooksOfAuthor?: Array<Types.ObjectId>
 };
 
 export const loadBooks = async (context: GraphQLContext, args: BookArgs) => {
-  const where = args.search
+  const search = args.search
     ? {
         title: {
           $regex: new RegExp(`^${args.search}`, 'ig')
@@ -55,10 +57,19 @@ export const loadBooks = async (context: GraphQLContext, args: BookArgs) => {
       }
     : {};
 
+  const findBooksOfAuthor = args.findBooksOfAuthor
+    ? {
+        _id: {
+          $in: args.findBooksOfAuthor
+        }
+      }
+    : {};
+
+  const where = { ...search, ...findBooksOfAuthor };
+
   const books = BookModel
-    .find(where, { _id: 1})
+    .find(where, { _id: 1 })
     .sort({ createdAt: -1 })
-    .populate('author');
 
   return connectionFromMongoCursor({
     cursor: books,
@@ -66,4 +77,4 @@ export const loadBooks = async (context: GraphQLContext, args: BookArgs) => {
     args,
     loader: load
   })
-}
+};
