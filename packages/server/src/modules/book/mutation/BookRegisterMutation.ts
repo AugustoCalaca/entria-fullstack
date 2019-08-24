@@ -1,8 +1,8 @@
-import { GraphQLString, GraphQLNonNull, GraphQLID, GraphQLInt } from 'graphql';
+import { GraphQLString, GraphQLNonNull, GraphQLInt } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
 
 import BookModel, { IBook } from '../BookModel';
-import AuthorModel, { IAuthor } from '../../author/AuthorModel';
+import AuthorModel from '../../author/AuthorModel';
 import pubSub, { EVENTS } from '../../../pubSub';
 
 import BookType from '../BookType';
@@ -21,6 +21,13 @@ export default mutationWithClientMutationId({
     }
   },
   mutateAndGetPayload: async ({ bookAuthorName, bookAuthorAge, bookTitle }) => {
+    const sameBookTitle = await BookModel.findOne({ title: bookTitle });
+    if(sameBookTitle) {
+      return {
+        error: 'Book title already exists'
+      };
+    }
+
     let author = await AuthorModel.findOne({ name: bookAuthorName, age: bookAuthorAge });
 
     if(!author) {
