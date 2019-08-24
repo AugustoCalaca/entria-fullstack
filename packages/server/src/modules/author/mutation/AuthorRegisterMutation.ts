@@ -24,7 +24,7 @@ export default mutationWithClientMutationId({
     }
 
     author = new AuthorModel({ name, age });
-    author.save();
+    await author.save();
 
     await pubSub.publish(EVENTS.AUTHOR.ADDED, { AuthorAdded: { author } })
 
