@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import hoistStatics from 'hoist-non-react-statics';
 import { QueryRenderer } from 'react-relay';
 
@@ -9,17 +9,17 @@ import  { GraphQLTaggedNode, Variables } from 'react-relay';
 import Environment from './Environment';
 
 type Config = {
-  query: ?GraphQLTaggedNode,
-  queriesParams?: ?(props: Object) => Object,
+  query: GraphQLTaggedNode,
+  queriesParams?: (props: Object) => Object,
   variables?: Variables,
   hideSplash?: boolean,
 };
 
 export default function createQueryRenderer(
-  FragmentComponent: React.ComponentType<*>,
-  Component: React.ComponentType<*>,
+  FragmentComponent: React.ComponentType<any>,
+  Component: React.ComponentType<any>,
   config: Config,
-): React.ComponentType<*> {
+): React.ComponentType<any> {
   const { query, queriesParams } = config;
 
   class QueryRendererWrapper extends React.Component<{}> {
@@ -37,15 +37,18 @@ export default function createQueryRenderer(
             }
 
             if (props) {
-              return <FragmentComponent {...this.props} query={props} />;
+              return <FragmentComponent {...this.props} query={props} />
             }
 
-            return <Text>loading</Text>;
+            console.log('props');
+            console.log(props);
+            return <Text>loading..</Text>;
+
           }}
         />
-      );
+        );
+      }
     }
-  }
 
-  return hoistStatics(QueryRendererWrapper, Component);
+    return hoistStatics(QueryRendererWrapper, Component);
 }
