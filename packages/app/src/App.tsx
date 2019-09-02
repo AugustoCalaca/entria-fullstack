@@ -1,19 +1,19 @@
-import React from 'react';
-import { StackNavigator } from 'react-navigation';
+import React, { useState } from 'react';
+import { StatusBar } from 'react-native';
+import { LoggedOutApp, LoggedInApp } from './Routes';
+import { getToken } from './auth';
 
-import UserCreate from './UserCreate';
-import UserList from './UserList';
-import UserDetail from './UserDetail';
+const App = () => {
+  const logged = getToken();
+  console.log('logged');
+  console.log(logged);
 
-const RelayApp = StackNavigator(
-  {
-    UserCreate: { screen: UserCreate },
-    UserList: { screen: UserList },
-    UserDetail: { screen: UserDetail },
-  },
-  {
-    initialRouteName: 'UserCreate',
-  },
-);
+  return (
+    <>
+      <StatusBar backgroundColor="#271E85" barStyle="light-content"s />
+      {logged ? <LoggedInApp /> : <LoggedOutApp />}
+    </>
+  )
+};
 
-export default () => <RelayApp />;
+export default App;
