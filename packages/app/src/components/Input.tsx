@@ -1,7 +1,7 @@
 
 
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 
 const InputWrapper = styled.View`
   height: 40;
@@ -21,6 +21,9 @@ type Props = {
   value?: string,
   onChangeText?: (string) => void,
   secureTextEntry?: boolean,
+  selectionColor?: string,
+  maxLength?: number,
+  keyboardType?: 'default' | 'numeric',
 };
 
 const Input = (props: Props) => (
