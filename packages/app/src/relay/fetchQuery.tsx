@@ -8,7 +8,7 @@ import  { RequestNode } from 'relay-runtime';
 import { handleData, getRequestBody, getHeaders, isMutation } from './helpers';
 import fetchWithRetries from './fetchWithRetries';
 
-export const GRAPHQL_URL = 'http://localhost:5000/graphql';
+export const GRAPHQL_URL = 'http://192.168.0.107:5000/graphql';
 
 // Define a function that fetches the results of a request (query/mutation/etc)
 // and returns its results as a Promise:
