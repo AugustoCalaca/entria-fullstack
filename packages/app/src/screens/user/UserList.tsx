@@ -1,5 +1,6 @@
 
-import React, { Component } from 'react';
+import React, { useState } from 'react';
+
 import {
   StyleSheet,
   Text,
@@ -7,68 +8,60 @@ import {
   TouchableHighlight,
   FlatList,
 } from 'react-native';
+
 import { withNavigation } from 'react-navigation';
 
 import {
-  createPaginationContainer,
   graphql,
+  createPaginationContainer,
 } from 'react-relay';
-import { createQueryRendererModern } from './relay';
+
+import { createQueryRendererModern } from '../../relay';
 
 import { UserList_query } from './__generated__/UserList_query.graphql';
+import { Navigation, Relay } from '../../types';
 
 type Props = {
   query: UserList_query,
+  relay: Relay,
+  navigation: Navigation
 };
 
-type State = {
-  isFetchingTop: boolean,
-};
+function UserList({ query, relay, navigation }: Props) {
+  const [isFetchingTop, setIsFetchingTop] = useState<boolean>(false)
 
-class UserList extends Component<any, Props, State> {
-  static navigationOptions = {
-    title: 'UserList',
-  };
+  const onRefresh = () => {
+    const { users } = query;
+    console.log('user list: ', users);
 
-  state = {
-    isFetchingTop: false,
-  };
-
-  onRefresh = () => {
-    const { users } = this.props.query;
-
-    if (this.props.relay.isLoading()) {
+    if (relay.isLoading()) {
       return;
     }
 
-    this.setState({
-      isFetchingTop: true,
-    })
+    setIsFetchingTop(true);
 
-    this.props.relay.refetchConnection(users.edges.length, (err) => {
-      this.setState({
-        isFetchingTop: false,
-      });
+    relay.refetchConnection(users.edges.length, () => {
+      setIsFetchingTop(false);
     });
   };
 
-  onEndReached = () => {
-    if (!this.props.relay.hasMore() || this.props.relay.isLoading()) {
+  const onEndReached = () => {
+    if (!relay.hasMore() || relay.isLoading()) {
       return;
     }
 
     // fetch more 2
-    this.props.relay.loadMore(2, (err) => {
+    relay.loadMore(2, (err) => {
       console.log('loadMore: ', err);
     });
   };
 
-  renderItem = ({ item }) => {
+  const renderItem = ({ item }) => {
     const { node } = item;
 
     return (
       <TouchableHighlight
-        onPress={() => this.goToUserDetail(node)}
+        onPress={() => goToUserDetail(node)}
         underlayColor="whitesmoke"
       >
         <View style={styles.userContainer}>
@@ -78,35 +71,32 @@ class UserList extends Component<any, Props, State> {
     );
   };
 
-  goToUserDetail = user => {
-    const { navigate } = this.props.navigation;
+  const goToUserDetail = user => {
+    const { navigate } = navigation;
 
     navigate('UserDetail', { id: user.id });
   };
 
-  render() {
-    const { users } = this.props.query;
+  const { users } = query;
 
-    return (
-      <View style={styles.container}>
-        <FlatList
-          data={users.edges}
-          renderItem={this.renderItem}
-          keyExtractor={item => item.node.id}
-          onEndReached={this.onEndReached}
-          onRefresh={this.onRefresh}
-          refreshing={this.state.isFetchingTop}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          ListFooterComponent={this.renderFooter}
-        />
-      </View>
-    );
-  }
-}
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={users.edges}
+        renderItem={renderItem}
+        keyExtractor={item => item.node.id}
+        onEndReached={onEndReached}
+        onRefresh={onRefresh}
+        refreshing={isFetchingTop}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        // ListFooterComponent={this.renderFooter}
+      />
+    </View>
+  );
+};
 
 const UserListPaginationContainer = createPaginationContainer(
-  UserList,
-  {
+  UserList, {
     query: graphql`
       fragment UserList_query on Query {
         users(
@@ -124,15 +114,16 @@ const UserListPaginationContainer = createPaginationContainer(
             }
           }
         }
-      } 
+      }
     `,
-  },
-  {
+  }, {
     direction: 'forward',
     getConnectionFromProps(props) {
+      console.log('getConnectionFromProps')
       return props.query && props.query.users;
     },
     getFragmentVariables(prevVars, totalCount) {
+      console.log('getConnectionFromProps')
       return {
         ...prevVars,
         count: totalCount,
@@ -144,9 +135,8 @@ const UserListPaginationContainer = createPaginationContainer(
         cursor,
       };
     },
-    variables: { cursor: null },
     query: graphql`
-      query UserListPaginationQuery (
+      query UserListPaginationQuery(
         $count: Int!,
         $cursor: String
       ) {
@@ -156,12 +146,10 @@ const UserListPaginationContainer = createPaginationContainer(
   },
 );
 
-
-export default
+export default withNavigation(
   createQueryRendererModern(
     UserListPaginationContainer,
-    UserList,
-    {
+    UserList, {
       query: graphql`
         query UserListQuery(
           $count: Int!,
@@ -170,9 +158,10 @@ export default
           ...UserList_query
         }
       `,
-      variables: {cursor: null, count: 1},
+      variables: { cursor: null, count: 1 },
     },
-  );
+  )
+);
 
 const styles = StyleSheet.create({
   container: {
