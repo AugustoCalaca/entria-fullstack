@@ -1,9 +1,3 @@
-type Mutation {
-  UserChangePassword(input: UserChangePasswordInput!): UserChangePasswordPayload
-  UserLoginWithEmail(input: UserLoginWithEmailInput!): UserLoginWithEmailPayload
-  UserRegisterWithEmail(input: UserRegisterWithEmailInput!): UserRegisterWithEmailPayload
-}
-
 """An object with an ID"""
 interface Node {
   """The id of the object."""
@@ -25,20 +19,128 @@ type PageInfoExtended {
   endCursor: String
 }
 
+type Mutation {
+  UserChangePassword(input: UserChangePasswordInput!): UserChangePasswordPayload
+  UserLoginWithEmail(input: UserLoginWithEmailInput!): UserLoginWithEmailPayload
+  UserRegisterWithEmail(input: UserRegisterWithEmailInput!): UserRegisterWithEmailPayload
+
+  AuthorRegister(input: AuthorRegisterInput!): AuthorRegisterPayload
+  BookRegister(input: BookRegisterInput!): BookRegisterPayload
+}
+
 """The root of all... queries"""
 type Query {
   """Fetches an object given its ID"""
-  node(
-    """The ID of an object"""
-    id: ID!
-  ): Node
+  node(id: ID!): Node
+
   me: User
+
   user(id: ID!): User
+  author(id: ID!): Author
+  book(id: ID!): Book
+
   users(after: String, first: Int, before: String, last: Int, search: String): UserConnection
+  authors(after: String, first: Int, before: String, last: Int, search: String): AuthorConnection
+  books(after: String, first: Int, before: String, last: Int, search: String): BookConnection
 }
 
 type Subscription {
   UserAdded: UserAddedPayload
+  AuthorAdded: AuthorAddedPayload
+  BookAdded: BookAddedPayload
+}
+
+type Author implements Node {
+  id: ID!
+  _id: String!
+  name: String!
+  age: Int!
+  books: BookConnection
+}
+
+input AuthorRegisterInput {
+  name: String!
+  age: Int!
+  error: String
+  clientMutationId: String
+}
+
+type AuthorRegisterPayload {
+  name: String!
+  age: Int!
+  clientMutationId: String
+}
+
+type AuthorConnection {
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+    This allows a client to fetch the first five objects by passing "5" as the
+    argument to "first", then fetch the total count so it could display "5 of 83",
+    for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """A list of edges."""
+  edges: [AuthorEdge]
+
+  pageInfo: PageInfoExtended!
+}
+
+type AuthorEdge {
+  node: Author!
+  cursor: String!
+}
+
+type AuthorAddedPayload {
+  authorEdge: AuthorEdge
+}
+
+"""Book data"""
+type Book implements Node {
+  id: ID!
+  _id: String!
+  title: String!
+  author: Author!
+}
+
+type BookConnection {
+  count: Int!
+  totalCount: Int!
+  startCursorOffset: Int!
+  endCursorOffset: Int!
+  edges: [BookEdge]
+  pageInfo: PageInfoExtended!
+}
+
+type BookEdge {
+  node: Book!
+  cursor: String!
+}
+
+input BookRegisterInput {
+  bookAuthorName: String!
+  bookAuthorAge: Int!
+  bookTitle: String!
+  clientMutationId: String
+}
+
+type BookRegisterPayload {
+  author: Author!
+  book: Book!
+  error: String
+  clientMutationId: String
+}
+
+type BookAddedPayload {
+  bookEdge: BookEdge
 }
 
 """User data"""
@@ -49,10 +151,6 @@ type User implements Node {
   name: String
   email: String
   active: Boolean
-}
-
-type UserAddedPayload {
-  userEdge: UserEdge
 }
 
 input UserChangePasswordInput {
@@ -71,27 +169,11 @@ type UserChangePasswordPayload {
 
 """A connection to a list of items."""
 type UserConnection {
-  """Number of items in this connection"""
   count: Int!
-
-  """
-  A count of the total number of objects in this connection, ignoring pagination.
-    This allows a client to fetch the first five objects by passing "5" as the
-    argument to "first", then fetch the total count so it could display "5 of 83",
-    for example.
-  """
   totalCount: Int!
-
-  """Offset from start"""
   startCursorOffset: Int!
-
-  """Offset till end"""
   endCursorOffset: Int!
-
-  """Information to aid in pagination."""
   pageInfo: PageInfoExtended!
-
-  """A list of edges."""
   edges: [UserEdge]!
 }
 
@@ -127,4 +209,8 @@ type UserRegisterWithEmailPayload {
   token: String
   error: String
   clientMutationId: String
+}
+
+type UserAddedPayload {
+  userEdge: UserEdge
 }

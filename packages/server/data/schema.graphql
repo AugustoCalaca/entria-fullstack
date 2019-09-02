@@ -60,14 +60,14 @@ type Author implements Node {
 
 input AuthorRegisterInput {
   name: String!
-  age: Number!
+  age: Int!
   error: String
   clientMutationId: String
 }
 
 type AuthorRegisterPayload {
   name: String!
-  age: Number!
+  age: Int!
   clientMutationId: String
 }
 
@@ -127,16 +127,16 @@ type BookEdge {
 
 input BookRegisterInput {
   bookAuthorName: String!
-  bookAuthorAge: Number!
+  bookAuthorAge: Int!
   bookTitle: String!
-  clientMutationId: String!
+  clientMutationId: String
 }
 
 type BookRegisterPayload {
   author: Author!
   book: Book!
   error: String
-  clientMutationId: String!
+  clientMutationId: String
 }
 
 type BookAddedPayload {
