@@ -11,51 +11,54 @@ import {
 import styled from 'styled-components/native';
 
 import { createQueryRendererModern } from '../../relay';
-import { withNavigation } from 'react-navigation';
-import { Navigation } from '../../types';
+import { withNavigation, NavigationScreenProps } from 'react-navigation';
 import { Me_query } from './__generated__/Me_query.graphql';
-import { signout } from '../../auth';
+import { signout } from '../../relay/helpers';
 
 const StyledView = styled.View`
   flex-direction: row;
   margin-top: 10;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
 `;
 
 const StyledTouchable = styled.TouchableOpacity`
   padding-left: 10;
   padding-right: 10;
+  padding-top: 5;
+  padding-bottom: 5;
   margin-right: 20;
   margin-left: 20;
-  border-width: 1;
   border-radius: 20;
-  border-color: #120E3D;
+  background-color: red;
 `;
 
 const StyledText = styled.Text`
   font-size: 12;
-  color: #120E3D;
+  font-weight: 700;
+  color: #eee;
 `;
 
 type Props = {
   query: Me_query,
-  navigation: Navigation,
-};
+} & NavigationScreenProps;
 
-function Me ({ query }: Props) {
+function Me ({ query, screenProps }: Props) {
   const { me } = query;
+  const handleLogout = () => {
+    signout();
+    screenProps.setLogged(false);
+  };
 
   return (
     <>
       <StyledView>
-        <StyledTouchable activeOpacity={0.7} onPress={() => signout()}>
-          <StyledText>Register Now</StyledText>
+        <StyledTouchable activeOpacity={0.7} onPress={handleLogout}>
+          <StyledText>Logout</StyledText>
         </StyledTouchable>
       </StyledView>
 
       <View style={styles.container}>
-        <Text>ID: {me.id}</Text>
         <Text>Name: {me.name}</Text>
         <Text>Email: {me.email}</Text>
       </View>
