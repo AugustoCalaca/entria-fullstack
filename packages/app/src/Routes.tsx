@@ -1,10 +1,12 @@
 import React from 'react';
-import { createAppContainer, createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import {
+  createAppContainer,
+  createStackNavigator,
+  createBottomTabNavigator
+} from 'react-navigation';
 
 import UserCreate from './screens/user/UserCreate';
 import UserLogin from './screens/user/UserLogin';
-import UserList from './screens/user/UserList';
-import UserDetail from './screens/user/UserDetail';
 import Me from './screens/user/Me';
 
 import BookCreate from './screens/book/BookCreate';
@@ -14,7 +16,7 @@ import BookDetail from './screens/book/BookDetail';
 import AuthorList from './screens/author/AuthorList';
 import AuthorDetail from './screens/author/AuthorDetail';
 
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const AuthStack = createStackNavigator({
   UserCreate: {
@@ -31,35 +33,11 @@ const AuthStack = createStackNavigator({
   },
 }, {
   initialRouteName: 'UserLogin',
-  defaultNavigationOptions: {
-    headerStyle: {
-      backgroundColor: '#2F259E',
+  navigationOptions: {
+    tabBarIcon: ({ focused, tintColor }) => {
+      return <Icon name={"user-lock"} size={20} color={tintColor} />
     },
-    headerTintColor: '#fff',
   },
-});
-
-const UserStack = createStackNavigator({
-  UserList: {
-    screen: UserList,
-    navigationOptions: {
-      title: 'User List',
-    }
-  },
-  Me: {
-    screen: Me,
-    navigationOptions: {
-      title: 'Me',
-    }
-  },
-  UserCreate: {
-    screen: UserCreate,
-    navigationOptions: {
-      title: 'User Create',
-    }
-  },
-}, {
-  initialRouteName: 'UserList',
   defaultNavigationOptions: {
     headerStyle: {
       backgroundColor: '#2F259E',
@@ -88,7 +66,12 @@ const BookStack = createStackNavigator({
     }
   },
 }, {
-  initialRouteName: 'BookCreate',
+  initialRouteName: 'BookList',
+  navigationOptions: {
+    tabBarIcon: ({ focused, tintColor }) => {
+      return <Icon name={"book"} size={20} color={tintColor} />
+    },
+  },
   defaultNavigationOptions: {
     headerStyle: {
       backgroundColor: '#2F259E',
@@ -112,6 +95,34 @@ const AuthorStack = createStackNavigator({
   },
 }, {
   initialRouteName: 'AuthorList',
+  navigationOptions: {
+    tabBarIcon: ({ focused, tintColor }) => {
+      return <Icon name={"pen-fancy"} size={20} color={tintColor} />
+    },
+  },
+  defaultNavigationOptions: {
+    headerStyle: {
+      backgroundColor: '#2F259E',
+    },
+    headerTintColor: '#fff',
+  },
+});
+
+
+const UserStack = createStackNavigator({
+  Me: {
+    screen: Me,
+    navigationOptions: {
+      title: 'Me',
+    }
+  },
+}, {
+  initialRouteName: 'Me',
+  navigationOptions: {
+    tabBarIcon: ({ focused, tintColor }) => {
+      return <Icon name={"user"} size={20} color={tintColor} />
+    },
+  },
   defaultNavigationOptions: {
     headerStyle: {
       backgroundColor: '#2F259E',
@@ -128,24 +139,9 @@ const LoggedInApp = createAppContainer(
     AuthorStack,
     UserStack,
   }, {
-    navigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, horizontal, tintColor }) => {
-        const { routeName } = navigation.state;
-        let iconName;
-        if (routeName === 'BookStack') {
-          iconName = 'book';
-        } else if (routeName === 'AuthorStack') {
-          iconName = 'person';
-        } else if (routeName === 'UserStack') {
-          iconName = 'user';
-        }
-
-        return <Icon name={iconName} size={25} color={tintColor} />
-      },
-    }),
     tabBarOptions: {
-      // showLabel: false,
-      activeTintColor: 'red',
+      showLabel: false,
+      activeTintColor: '#2F259E',
       inactiveTintColor: 'gray',
     },
   })
