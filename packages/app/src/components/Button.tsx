@@ -1,4 +1,5 @@
-//@flow
+
+
 import React, { ReactNode } from 'react';
 import styled from 'styled-components/native';
 
@@ -14,7 +15,6 @@ const Wrapper = styled.TouchableOpacity`
   border-width: 1;
   margin-left: auto;
   margin-right: auto;
-
 `;
 
 type Props = {

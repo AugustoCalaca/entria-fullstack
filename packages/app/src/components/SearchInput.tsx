@@ -13,13 +13,13 @@ type Props = {
 };
 
 const SearchInput = (props: Props) => (
-    <StyledInput
-      selectionColor="#271E85"
-      placeholder="Search..."
-      placeholderTextColor="#271E85"
-      onChangeText={props.onChangeText}
-      underlineColorAndroid="#271E85"
-    />
+  <StyledInput
+    selectionColor="#271E85"
+    placeholder="Search..."
+    placeholderTextColor="#271E85"
+    onChangeText={props.onChangeText}
+    underlineColorAndroid="#271E85"
+  />
 );
 
 export default SearchInput;
