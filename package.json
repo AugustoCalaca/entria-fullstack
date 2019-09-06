@@ -110,11 +110,15 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/app",
+      "packages/server"
     ],
     "nohoist": [
+      "**/react",
+      "**/react*",
       "**/react-native",
-      "**/react-native-*"
+      "**/react-native-*",
+      "**/react-native/**"
     ]
   }
 }
