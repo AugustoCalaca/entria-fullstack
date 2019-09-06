@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { ActivityIndicator } from 'react-native';
+import { Formik, FormikProps } from 'formik';
+import * as Yup from 'yup';
 import styled from 'styled-components/native';
+import { NavigationScreenProps } from 'react-navigation';
 
 import Button from '../../components/Button';
-import Input from '../../components/Input';
+import { Input, InputWrapper} from '../../components/Input';
 import BookRegisterMutation from './BookRegisterMutation';
-import { Navigation } from '../../types';
 
 const Wrapper = styled.View`
   flex: 1;
@@ -16,21 +19,31 @@ const ButtonText = styled.Text`
   font-size: 16;
 `;
 
-type Props = {
-  navigation: Navigation,
+type FormValues = {
+  bookTitle: string,
+  bookAuthorName: string,
+  bookAuthorAge: string,
 }
 
-function UserCreate ({ navigation }: Props) {
-  const [bookTitle, setBookTitle] = useState<string>('');
-  const [bookAuthorName, setBookAuthorName] = useState<string>('');
-  const [bookAuthorAge, setBookAuthorAge] = useState<string>('');
+const validationSchema = Yup.object().shape({
+  bookTitle: Yup
+    .string()
+    .label('Book Title')
+    .required(),
+  bookAuthorName: Yup
+    .string()
+    .label('Author Name')
+    .required(),
+  bookAuthorAge: Yup
+    .string()
+    .label('Author Age')
+    .required()
+    .max(2)
+});
 
-  const handleRegister = () => {
-    const input = {
-      bookTitle,
-      bookAuthorName,
-      bookAuthorAge: parseInt(bookAuthorAge),
-    }
+function UserCreate ({ navigation }: NavigationScreenProps) {
+  const handleRegister = ({ bookAuthorAge, ...rest }: FormValues) => {
+    const input = { bookAuthorAge: parseInt(bookAuthorAge), ...rest };
 
     const onCompleted = () => {
       console.log('onCompleted');
@@ -43,41 +56,75 @@ function UserCreate ({ navigation }: Props) {
     }
 
     BookRegisterMutation.commit(input, onCompleted, onError);
-  }
-
-  const goToList = () => {
-    navigation.navigate('BookList');
   };
 
   return (
-    <Wrapper>
-      <Input
-        name="bookTitle"
-        placeholder="Book Title"
-        value={bookTitle}
-        selectionColor="#4032DA"
-        onChangeText={value => setBookTitle(value)}
-      />
-      <Input
-        name="bookAuthorName"
-        placeholder="Author Name"
-        value={bookAuthorName}
-        selectionColor="#4032DA"
-        onChangeText={value => setBookAuthorName(value)}
-        />
-      <Input
-        name="bookAuthorAge"
-        placeholder="Author Age"
-        value={bookAuthorAge}
-        selectionColor="#4032DA"
-        onChangeText={value => setBookAuthorAge(value)}
-        maxLength={2}
-        keyboardType={"numeric"}
-      />
-      <Button onPress={() => handleRegister()}>
-        <ButtonText>Book Register</ButtonText>
-      </Button>
-    </Wrapper>
+    <Formik
+     initialValues={{ bookTitle: '', bookAuthorName: '', bookAuthorAge: '0' }}
+     onSubmit={handleRegister}
+     validationSchema={validationSchema}
+   >
+     {(formikProps: FormikProps<FormValues>) => (
+       <Wrapper>
+          <InputWrapper>
+            <Input
+              underlineColorAndroid={
+                (formikProps.touched.bookTitle && formikProps.errors.bookTitle)
+                  ? 'red'
+                  : '#444'
+              }
+              name="bookTitle"
+              placeholder="Book Title"
+              selectionColor="#4032DA"
+              onChangeText={formikProps.handleChange('bookTitle')}
+              onBlur={formikProps.handleBlur('bookTitle')}
+              autoFocus={true}
+            />
+          </InputWrapper>
+
+          <InputWrapper>
+           <Input
+              underlineColorAndroid={
+                (formikProps.touched.bookAuthorName && formikProps.errors.bookAuthorName)
+                  ? 'red'
+                  : '#444'
+              }
+              name="bookAuthorName"
+              placeholder="Author's name of the book"
+              selectionColor="#4032DA"
+              onChangeText={formikProps.handleChange('bookAuthorName')}
+              onBlur={formikProps.handleBlur('bookAuthorName')}
+              formikProps={formikProps}
+            />
+          </InputWrapper>
+
+          <InputWrapper>
+            <Input
+              underlineColorAndroid={
+                (formikProps.touched.bookAuthorAge && formikProps.errors.bookAuthorAge)
+                  ? 'red'
+                  : '#444'
+              }
+              name="bookAuthorAge"
+              placeholder="Author's Age of the book"
+              maxLength={2}
+              keyboardType={"numeric"}
+              selectionColor="#4032DA"
+              onChangeText={formikProps.handleChange('bookAuthorAge')}
+              onBlur={formikProps.handleBlur('bookAuthorAge')}
+            />
+          </InputWrapper>
+
+          {formikProps.isSubmitting ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+            <Button onPress={formikProps.handleSubmit}>
+              <ButtonText>Register</ButtonText>
+            </Button>
+          )}
+      </Wrapper>
+     )}
+    </Formik>
   );
 }
 
