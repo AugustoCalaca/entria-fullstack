@@ -1,4 +1,5 @@
 
+import AsyncStorage from '@react-native-community/async-storage';
 import  { Variables, UploadableMap, CacheConfig } from 'react-relay';
 import  { RequestNode } from 'relay-runtime';
 
@@ -38,7 +39,7 @@ function getRequestBodyWithoutUplodables(request, variables) {
   });
 }
 
-export function getRequestBody(request: RequestNode, variables: Variables, uploadables: UploadableMap) {
+export function getRequestBody(request: RequestNode, variables: Variables, uploadables?: UploadableMap) {
   if (uploadables) {
     return getRequestBodyWithUploadables(request, variables, uploadables);
   }
@@ -46,7 +47,26 @@ export function getRequestBody(request: RequestNode, variables: Variables, uploa
   return getRequestBodyWithoutUplodables(request, variables);
 }
 
-export const getHeaders = (uploadables: UploadableMap) => {
+export const TOKEN = 'TOKEN_VERY_STRONG'
+
+export const getToken = () => {
+  try {
+    const token = AsyncStorage.getItem(TOKEN);
+    return token;
+  } catch(err) {
+    console.log('token error', err);
+  }
+};
+
+export const signin = (newToken: string) => {
+  AsyncStorage.setItem(TOKEN, newToken);
+};
+
+export const signout = () => {
+  AsyncStorage.removeItem(TOKEN);
+};
+
+export const getHeaders = (uploadables?: UploadableMap) => {
   if (uploadables) {
     return {
       Accept: '*/*',
