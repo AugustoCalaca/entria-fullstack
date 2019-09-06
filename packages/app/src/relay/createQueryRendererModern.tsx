@@ -1,12 +1,17 @@
 
-import * as React from 'react';
-import { Text, View } from 'react-native';
+import React from 'react';
+import {
+  Text,
+} from 'react-native';
+import {
+  GraphQLTaggedNode,
+  Variables,
+  QueryRenderer
+} from 'react-relay';
 import hoistStatics from 'hoist-non-react-statics';
-import { QueryRenderer } from 'react-relay';
-
-import  { GraphQLTaggedNode, Variables } from 'react-relay';
 
 import Environment from './Environment';
+import Loading from '../components/Loading';
 
 type Config = {
   query: GraphQLTaggedNode,
@@ -37,13 +42,12 @@ export default function createQueryRenderer(
             }
 
             if (props) {
+              console.log('props');
+              console.log(props);
               return <FragmentComponent {...this.props} query={props} />
             }
 
-            console.log('props');
-            console.log(props);
-            return <Text>loading..</Text>;
-
+            return <Loading />
           }}
         />
         );
