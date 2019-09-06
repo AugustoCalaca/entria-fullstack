@@ -1,11 +1,17 @@
 
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import  { Variables, UploadableMap } from 'react-relay';
 
 import  { RequestNode } from 'relay-runtime';
 
-import { handleData, getRequestBody, getHeaders, isMutation } from './helpers';
+import {
+  handleData,
+  getRequestBody,
+  getHeaders,
+  getToken,
+  isMutation
+} from './helpers';
 import fetchWithRetries from './fetchWithRetries';
 
 export const GRAPHQL_URL = 'http://192.168.0.107:5000/graphql';
@@ -17,6 +23,7 @@ const fetchQuery = async (request: RequestNode, variables: Variables, uploadable
     const body = getRequestBody(request, variables, uploadables);
     const headers = {
       ...getHeaders(uploadables),
+      authorization: await getToken(),
     };
 
     const response = await fetchWithRetries(GRAPHQL_URL, {
