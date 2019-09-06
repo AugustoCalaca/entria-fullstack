@@ -9,23 +9,21 @@ import {
   FlatList,
 } from 'react-native';
 
-import { withNavigation } from 'react-navigation';
-
 import {
   graphql,
   createPaginationContainer,
 } from 'react-relay';
 
+import { withNavigation, NavigationScreenProps } from 'react-navigation';
+
 import { createQueryRendererModern } from '../../relay';
 
 import { UserList_query } from './__generated__/UserList_query.graphql';
-import { Navigation, Relay } from '../../types';
 
 type Props = {
   query: UserList_query,
-  relay: Relay,
-  navigation: Navigation
-};
+  relay: any,
+} & NavigationScreenProps;
 
 function UserList({ query, relay, navigation }: Props) {
   const [isFetchingTop, setIsFetchingTop] = useState<boolean>(false)

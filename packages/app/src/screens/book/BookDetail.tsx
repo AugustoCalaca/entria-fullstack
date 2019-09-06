@@ -13,15 +13,15 @@ import {
   createFragmentContainer,
 } from 'react-relay';
 
+import { NavigationScreenProps } from 'react-navigation';
+
 import { createQueryRendererModern } from '../../relay';
 import { withNavigation } from 'react-navigation';
-import { Navigation } from '../../types';
 import { BookDetail_query } from './__generated__/BookDetail_query.graphql';
 
 type Props = {
   query: BookDetail_query,
-  navigation: Navigation,
-};
+} & NavigationScreenProps;
 
 function BookDetail ({ query, navigation }: Props) {
   const { book } = query;
@@ -48,7 +48,6 @@ function BookDetail ({ query, navigation }: Props) {
   );
 }
 
-// UserDetailFragmentContainer
 const BookDetailFragmentContainer = createFragmentContainer(
   BookDetail, {
     query: graphql`
@@ -92,6 +91,5 @@ const styles = StyleSheet.create({
     padding: 20,
     borderWidth: 1,
     borderColor: '#2F259E',
-    // backgroundColor: '#ccc'
   },
 });

@@ -14,15 +14,22 @@ import {
   createFragmentContainer,
 } from 'react-relay';
 
+import {
+  withNavigation,
+  NavigationScreenProps
+} from 'react-navigation';
+
+import styled from 'styled-components/native';
 import { createQueryRendererModern } from '../../relay';
-import { withNavigation } from 'react-navigation';
-import { Navigation } from '../../types';
 import { AuthorDetail_query } from './__generated__/AuthorDetail_query.graphql';
+
+const Wrapper = styled.View`
+  flex: 1;
+`;
 
 type Props = {
   query: AuthorDetail_query,
-  navigation: Navigation,
-};
+} & NavigationScreenProps;
 
 function AuthorDetail ({ query }: Props) {
   const { author } = query;
@@ -44,28 +51,31 @@ function AuthorDetail ({ query }: Props) {
   const { books } = author;
 
   return (
-    <>
+    <Wrapper>
       <View style={styles.container}>
-        <Text>Author Name: {author.name}</Text>
-        <Text>Author Age: {author.age}</Text>
+        <View style={styles.item}>
+          <Text>Name: {author.name}</Text>
+        </View>
+        <View style={styles.item}>
+          <Text>Age: {author.age}</Text>
+        </View>
       </View>
 
-      <View >
-        <Text>Books by this author</Text>
-      </View>
+      <Text style={styles.text}>Books by this author</Text>
 
-      <FlatList
-        data={books.edges}
-        renderItem={renderItem}
-        keyExtractor={item => item.node.id}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        // ListFooterComponent={this.renderFooter}
-      />
-    </>
+      <View style={styles.container}>
+        <FlatList
+          data={books.edges}
+          renderItem={renderItem}
+          keyExtractor={item => item.node.id}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+        />
+      </View>
+    </Wrapper>
   );
 }
 
-// UserDetailFragmentContainer
+// AuthorDetailFragmentContainer
 const AuthorDetailFragmentContainer = createFragmentContainer(
   AuthorDetail, {
     query: graphql`
@@ -82,6 +92,7 @@ const AuthorDetailFragmentContainer = createFragmentContainer(
             edges {
               node {
                 id
+                _id
                 title
               }
             }
@@ -109,8 +120,16 @@ export default withNavigation(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: 'center',
     justifyContent: 'center',
+  },
+  item: {
+    padding: 10,
+    margin: 10,
+    borderWidth: 1,
+    borderColor: '#2F259E',
+  },
+  text: {
+    margin: 15,
   },
   separator: {
     height: 1,

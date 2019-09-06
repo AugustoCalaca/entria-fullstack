@@ -9,25 +9,26 @@ import {
   FlatList,
 } from 'react-native';
 
-import { withNavigation } from 'react-navigation';
-
 import {
   graphql,
   createPaginationContainer,
 } from 'react-relay';
 
+import {
+  withNavigation,
+  NavigationScreenProps
+} from 'react-navigation';
+
 import { createQueryRendererModern } from '../../relay';
 
 import { AuthorList_query } from './__generated__/AuthorList_query.graphql';
-import { Navigation, Relay } from '../../types';
 
 import SearchInput from '../../components/SearchInput';
 
 type Props = {
   query: AuthorList_query,
-  relay: Relay,
-  navigation: Navigation
-};
+  relay: any,
+} & NavigationScreenProps;
 
 function AuthorList({ query, relay, navigation }: Props) {
   const [isFetchingTop, setIsFetchingTop] = useState<boolean>(false)

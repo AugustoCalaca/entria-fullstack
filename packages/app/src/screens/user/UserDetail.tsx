@@ -9,14 +9,12 @@ import {
 } from 'react-relay';
 
 import { createQueryRendererModern } from '../../relay';
-import { withNavigation } from 'react-navigation';
-import { Navigation } from '../../types';
+import { withNavigation, NavigationScreenProps } from 'react-navigation';
 import { UserDetail_query } from './__generated__/UserDetail_query.graphql';
 
 type Props = {
   query: UserDetail_query,
-  navigation: Navigation,
-};
+} & NavigationScreenProps;
 
 function UserDetail ({ query }: Props) {
   const { user } = query;

@@ -17,20 +17,17 @@ import {
 } from 'react-relay';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
-
-import { createQueryRendererModern } from '../../relay';
-
+import { NavigationScreenProps } from 'react-navigation';
 import { BookList_query } from './__generated__/BookList_query.graphql';
-import { Navigation, Relay } from '../../types';
+import { createQueryRendererModern } from '../../relay';
 
 import SearchInput from '../../components/SearchInput';
 import Fab from '../../components/Fab';
 
 type Props = {
   query: BookList_query,
-  relay: Relay,
-  navigation: Navigation,
-};
+  relay: any,
+} & NavigationScreenProps;
 
 export function BookList({ query, relay, navigation }: Props) {
   const [isFetchingTop, setIsFetchingTop] = useState<boolean>(false)
