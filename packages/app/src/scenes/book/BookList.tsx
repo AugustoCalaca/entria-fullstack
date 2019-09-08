@@ -20,7 +20,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { NavigationScreenProps } from 'react-navigation';
 import { BookList_query } from './__generated__/BookList_query.graphql';
 import { createQueryRendererModern } from '../../relay';
-import subscribe from './BookAddedSubscription';
+import subscribe from './subscription/BookAddedSubscription';
 
 import SearchInput from '../../components/SearchInput';
 import Fab from '../../components/Fab';
