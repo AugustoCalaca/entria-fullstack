@@ -48,7 +48,7 @@ function UserCreate ({ navigation }: NavigationScreenProps) {
     const onCompleted = () => {
       console.log('onCompleted');
 
-      navigation.navigate('BookList');
+      navigation.goBack();
     }
 
     const onError = () => {
