@@ -5,16 +5,16 @@ import {
   createBottomTabNavigator
 } from 'react-navigation';
 
-import UserCreate from './screens/user/UserCreate';
-import UserLogin from './screens/user/UserLogin';
-import Me from './screens/user/Me';
+import UserCreate from './scenes/user/UserCreate';
+import UserLogin from './scenes/user/UserLogin';
+import Me from './scenes/user/Me';
 
-import BookCreate from './screens/book/BookCreate';
-import BookList from './screens/book/BookList';
-import BookDetail from './screens/book/BookDetail';
+import BookCreate from './scenes/book/BookCreate';
+import BookList from './scenes/book/BookList';
+import BookDetail from './scenes/book/BookDetail';
 
-import AuthorList from './screens/author/AuthorList';
-import AuthorDetail from './screens/author/AuthorDetail';
+import AuthorList from './scenes/author/AuthorList';
+import AuthorDetail from './scenes/author/AuthorDetail';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
