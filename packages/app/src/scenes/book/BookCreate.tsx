@@ -7,7 +7,7 @@ import { NavigationScreenProps } from 'react-navigation';
 
 import Button from '../../components/Button';
 import { Input, InputWrapper} from '../../components/Input';
-import BookRegisterMutation from './BookRegisterMutation';
+import BookRegisterMutation from './mutation/BookRegisterMutation';
 
 const Wrapper = styled.View`
   flex: 1;

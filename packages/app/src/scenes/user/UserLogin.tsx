@@ -8,7 +8,7 @@ import { NavigationScreenProps } from 'react-navigation';
 import { Input, InputWrapper } from '../../components/Input';
 import Button from '../../components/Button';
 import { signin } from '../../relay/helpers';
-import UserLoginWithEmailMutation from './UserLoginWithEmailMutation';
+import UserLoginWithEmailMutation from './mutation/UserLoginWithEmailMutation';
 
 const Wrapper = styled.View`
   flex: 1;

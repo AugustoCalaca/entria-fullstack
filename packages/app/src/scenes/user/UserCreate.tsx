@@ -7,7 +7,7 @@ import styled from 'styled-components/native';
 
 import Button from '../../components/Button';
 import { Input, InputWrapper} from '../../components/Input';
-import UserRegisterWithEmailMutation from './UserRegisterWithEmailMutation';
+import UserRegisterWithEmailMutation from './mutation/UserRegisterWithEmailMutation';
 import { NavigationScreenProps } from 'react-navigation';
 import { signin } from '../../relay/helpers';
 
@@ -44,7 +44,7 @@ const validationSchema = Yup.object().shape({
     .min(3, 'Seems a bit short...')
 });
 
-function UserCreate ({ navigation, screenProps }: NavigationScreenProps) {
+function UserCreate ({ screenProps }: NavigationScreenProps) {
   const handleRegister = (values: FormValues) => {
     const input = { ...values }
 
