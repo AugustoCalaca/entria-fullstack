@@ -52,7 +52,7 @@ export const loadBooks = async (context: GraphQLContext, args: BookArgs) => {
   const search = args.search
     ? {
         title: {
-          $regex: new RegExp(`^${args.search}`, 'ig')
+          $regex: new RegExp(`${args.search}`, 'ig')
         }
       }
     : {};
