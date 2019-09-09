@@ -34,16 +34,21 @@ function BookDetail ({ query, navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text>Title: {book.title}</Text>
-      <TouchableHighlight
-        onPress={() => goToBookDetail(book.author.id)}
-        underlayColor="whitesmoke"
-      >
-        <View style={styles.authorContainer}>
-          <Text>Author Name: {book.author.name}</Text>
-          <Text>Author Age: {book.author.age}</Text>
-        </View>
-      </TouchableHighlight>
+      <View style={styles.item}>
+        <Text>Title: {book.title}</Text>
+      </View>
+
+      <View style={styles.separator}>
+        <TouchableHighlight
+          onPress={() => goToBookDetail(book.author.id)}
+          underlayColor="whitesmoke"
+        >
+          <View style={styles.authorContainer}>
+            <Text>Author Name: {book.author.name}</Text>
+            <Text>Author Age: {book.author.age}</Text>
+          </View>
+        </TouchableHighlight>
+      </View>
     </View>
   );
 }
@@ -83,13 +88,22 @@ export default withNavigation(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
   },
-  authorContainer: {
-    margin: 20,
-    padding: 20,
+  item: {
+    padding: 10,
+    margin: 10,
     borderWidth: 1,
-    borderColor: '#2F259E',
+    borderColor: '#ddd',
+  },
+  separator: {
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderTopColor: '#ccc',
+    borderBottomColor: '#ccc',
+  },
+  authorContainer: {
+    marginHorizontal: 20,
+    marginVertical: 10,
   },
 });
