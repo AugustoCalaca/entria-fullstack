@@ -59,8 +59,12 @@ function Me ({ query, screenProps }: Props) {
       </StyledView>
 
       <View style={styles.container}>
-        <Text>Name: {me.name}</Text>
-        <Text>Email: {me.email}</Text>
+        <View style={styles.item}>
+          <Text>Name: {me.name}</Text>
+        </View>
+        <View style={styles.item}>
+          <Text>Email: {me.email}</Text>
+        </View>
       </View>
     </>
   );
@@ -97,7 +101,12 @@ export default withNavigation(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
+  },
+  item: {
+    padding: 10,
+    margin: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
 });
