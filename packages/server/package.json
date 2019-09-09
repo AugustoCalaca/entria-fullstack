@@ -114,6 +114,7 @@
     "test": "jest",
     "test:watch": "jest --watch --coverage",
     "typecheck": "tsc",
-    "update-schema": "babel-node --extensions \".es6,.js,.es,.jsx,.mjs,.ts\" ./scripts/updateSchema.js"
+    "update-schema": "babel-node --extensions \".es6,.js,.es,.jsx,.mjs,.ts\" ./scripts/updateSchema.js",
+    "mock-mongo": "mongo  127.0.0.1/database mock.js"
   }
 }
