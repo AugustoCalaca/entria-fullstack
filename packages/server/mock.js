@@ -1,7 +1,6 @@
-import { Book } from './src/model';
-import { connectDatabase } from './src/database';
 
-const books = [{
+
+const data = [{
   "title": "Harry Potter and the Half-Blood Prince",
   "author": {
     "name": "J.K. Rowling",
@@ -79,14 +78,43 @@ const books = [{
   }
 }];
 
-async function createBooksMock() {
-	connectDatabase();
-	const addBooks = books.map(async(book) => {
-		const newBook = await new Book(book);
-		await newBook.save();
-	});
+function createBooksMock() {
+	data.map((book) => {
+    let bookAuthor = db.authors.findOne({
+      name: book.author.name,
+      age: book.author.age,
+    });
 
-	return addBooks;
+    if(bookAuthor === null) {
+      db.authors.insert({
+        name: book.author.name,
+        age: book.author.age,
+      });
+      bookAuthor = db.authors.findOne({
+        name: book.author.name,
+        age: book.author.age,
+      });
+    }
+
+		db.books.insert({
+      title: book.title,
+      author: bookAuthor._id,
+    });
+
+		const newBook = db.books.findOne({
+      title: book.title,
+      author: bookAuthor._id,
+    });
+
+    db.authors.updateOne({
+      _id: bookAuthor._id
+    }, {
+      $addToSet: {
+        books: newBook._id
+      }
+    });
+	});
 }
+
 
 createBooksMock();
