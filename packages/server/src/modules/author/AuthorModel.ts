@@ -19,6 +19,8 @@ const schema = new mongoose.Schema({
   timestamps: true
 });
 
+schema.index({ name: 'text' });
+
 export interface IAuthor extends Document {
   name: string,
   age: number

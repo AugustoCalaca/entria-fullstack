@@ -50,11 +50,17 @@ type AuthorArgs = ConnectionArguments & {
 };
 
 export const loadAuthors = async (context: GraphQLContext, args: AuthorArgs) => {
-  const where = args.search
+  const andSearch = args.search && args.search
+    .split(' ')
+    .map(str => '\"' + str + '\"')
+    .join(' ');
+
+  console.log('search');
+  console.log(andSearch);
+
+  const where = andSearch
     ? {
-        name: {
-          $regex: new RegExp(`^${args.search}`, 'ig')
-        }
+        $text: { $search: andSearch }
       }
     : {};
 

@@ -49,11 +49,14 @@ type BookArgs = ConnectionArguments & {
 };
 
 export const loadBooks = async (context: GraphQLContext, args: BookArgs) => {
-  const search = args.search
+  const andSearch = args.search && args.search
+    .split(' ')
+    .map(str => '\"' + str + '\"')
+    .join(' ');
+
+  const search = andSearch
     ? {
-        title: {
-          $regex: new RegExp(`${args.search}`, 'ig')
-        }
+        $text: { $search: andSearch }
       }
     : {};
 
