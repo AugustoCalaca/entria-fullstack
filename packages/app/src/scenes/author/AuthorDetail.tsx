@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 10,
     borderWidth: 1,
-    borderColor: '#2F259E',
+    borderColor: '#ddd',
   },
   text: {
     margin: 15,
